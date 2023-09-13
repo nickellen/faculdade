@@ -1,0 +1,63 @@
+AV3-b
+
+Esta avaliação ocorrerá sobre a base de dados Sakila, portanto dedique um tempo para compreender essa base de dados.
+
+AÇÕES A SEREM FEITAS:
+
+A1) elaborar e fornecer comandos SQL que utilizem os recursos abaixo. Além do comando SQL, você deve fornecer também uma descrição textual explicando no que consistem os resultados retornados. Caso queira, pode também explicar o SQL.
+
+a) consultas aninhadas
+
+selecionar o titulo do filme, onde a atriz Penelope atuou
+
+SELECT film_id, title FROM film
+WHERE film_id in
+(
+SELECT film_id FROM film_actor
+WHERE actor_id in 
+(SELECT actor_id FROM actor
+WHERE first_name like "PENELOPE"));
+
+b) consultas aninhadas correlacionadas
+
+c) exists 
+
+verificar se existem atores cujo primeiro nome é igual ao ultimo nome
+
+SELECT a.first_name, a.last_name FROM actor as a
+WHERE EXISTS 
+(SELECT first_name, last_name FROM customer
+WHERE first_name=a.first_name AND last_name=a.last_name
+);
+
+d) unique ou distinct
+
+e) junções naturais
+
+exibir os 5 primeiros filmes
+onde a categoria do filme é Classics
+
+SELECT title, length, name
+FROM category JOIN film_category JOIN film
+WHERE name="Classics" LIMIT 5;
+
+SELECT category_id, name, film_id FROM category join film_category;
+
+SELECT * FROM (category join film_category) limit 10;
+
+SELECT * FROM category join film_category on category.category_id=film_category.category_id limit 10;
+
+
+f) junção left ou right
+g) agregação
+h) group by
+
+A2) fornecer o comando de criação de uma visão;
+
+A3) elaborar um programa (sugestão: em python) que percorra os registros obtidos por um dos comandos SQL's que foi criado nos itens "a" a "h".
+
+PARA TODAS AS RESPOSTAS FORNEÇA TAMBÉM um ou mais print's da tela, demonstrando a execução do comando.
+
+O envio ocorrerá por meio de um link de acesso aos arquivos (endereço de repositório, google drive, etc). Sugere-se o uso de repositórios para compor portfólio pessoal de aprendizagem.
+
+FIM
