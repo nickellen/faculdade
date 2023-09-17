@@ -1,22 +1,4 @@
 AV3-b
------ SELECIONAR NOMES DOS ATORES CUJA PRIMEIRA LETRA DO NOME É IGUAL A ULTIMA LETRA DO NOME
-
-SELECT first_name, last_name from actor WHERE LEFT(first_name,1)=RIGHT(last_name,1);
-
------ SELECIONAR OS TITULOS DOS FILMES QUE A ATRIZ PENELOPE GUINESS ATUOU, 
-      JUNTAMENTO COM O DI E O NOME DA ATRIZ E ID'S DOS FILMES
-
-SELECT film_actor.film_id,  film.title, 
-       film_actor.actor_id, actor.first_name, actor.last_name
-from (actor join film_actor on actor.actor_id=film_actor.actor_id) join film on film.film_id=film_actor.film_id 
-WHERE actor.first_name like "PENELOPE" AND actor.last_name="GUINESS";
-
------- SELECIONAR O FILME COM MAIOR NUMERO DE ATORES
-
------- SELECINAR O ATOR QUE MENOS ATUOU EM FILMES
-
------- EXIBIR OS FILMES DE MAIOR DURAÇÃO DE CADA CATEGORIA
-
 
 Esta avaliação ocorrerá sobre a base de dados Sakila, portanto dedique um tempo para compreender essa base de dados.
 
@@ -36,6 +18,16 @@ WHERE film.film_id in ( SELECT film_id FROM film_actor
 
 b) consultas aninhadas correlacionadas
 
+----- SELECIONAR OS ATORES CUJA PRIMEIRA LETRA DO NOME NÃO PERTENCE 
+A PRIMEIRA LETRA DO NOME DE NENHUM PAÍS
+
+SELECT *
+FROM actor 
+WHERE NOT EXISTS
+      (SELECT country from country
+      WHERE LEFT(country,1) = LEFT(first_name,1)
+);
+      
 c) exists 
 
 ----- SELECIONAR ATORES QUE TEM NOMES IGUAIS A NOMES DE CLIENTES
@@ -47,6 +39,24 @@ WHERE EXISTS
 );
 
 d) unique ou distinct
+
+----- NOMES DOS ATORES QUE ESTAVAM NOS FILMES MAIS ALUGADOS
+
+SELECT DISTINCT actor.first_name, actor.last_name
+FROM actor, film_actor
+WHERE actor.actor_id = film_actor.actor_id AND
+      film_actor.film_id in (1,2,3,4,5,6,7,8,9);
+
+------ QUANTOS FILMES DA LOJA 1 QUE NÃO TEM NA LOJA 2
+
+SELECT COUNT(*) AS quant_filmes FROM film
+WHERE film_id in (SELECT DISTINCT film_id
+                  FROM inventory
+                  WHERE store_id=1
+                  EXCEPT
+                  SELECT DISTINCT film_id
+                  FROM inventory
+                  WHERE store_id=2);
 
 e) junções naturais
 
@@ -73,8 +83,44 @@ WHERE category.name="Foreign"
 ORDER BY film.length DESC LIMIT 1;
 
 f) junção left ou right
+
+----- QUANTIDADE DE FILMES QUE NÃO TEM NA LOJA 2
+
+SELECT COUNT(DISTINCT film.film_id)
+FROM film LEFT JOIN inventory on inventory.film_id = film.film_id AND inventory.store_id=2
+WHERE inventory.store_id IS NULL;
+
+SELECT COUNT( DISTINCT *) AS qtd_films FROM inventory;
+
 g) agregação
+
 h) group by
+
+------ SELECIONAR O FILME COM MAIOR NUMERO DE ATORES
+
+SELECT film.film_id, film.title, COUNT(*) as num_atores
+FROM (film join film_actor on film.film_id = film_actor.film_id)
+GROUP BY film.film_id
+ORDER BY num_atores DESC LIMIT 1;
+
+------ SELECINAR O ATOR QUE MENOS ATUOU EM FILMES
+
+SELECT actor.actor_id, actor.first_name, actor.last_name, COUNT(*) as num_filmes
+FROM (actor join film_actor on actor.actor_id = film_actor.actor_id)
+GROUP BY actor.actor_id
+ORDER BY num_filmes ASC LIMIT 1;
+
+------ EXIBIR OS FILMES DE MAIOR DURAÇÃO DE CADA CATEGORIA
+pra cada cadegoria, o filme de maior duração da mesma
+
+SELECT category.name, film.title, film.length
+FROM (category JOIN film_category on category.category_id=film_category.category_id) 
+      JOIN film on film.film_id=film_category.film_id 
+WHERE (category.name, film.length) in 
+      (SELECT category.name, MAX(film.length)
+      FROM (category JOIN film_category on category.category_id=film_category.category_id) 
+            JOIN film on film.film_id=film_category.film_id
+      GROUP BY category.name);
 
 A2) fornecer o comando de criação de uma visão;
 
