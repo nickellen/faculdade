@@ -40,23 +40,20 @@ WHERE EXISTS
 
 d) unique ou distinct
 
------ NOMES DOS ATORES QUE ESTAVAM NOS FILMES MAIS ALUGADOS
+----- TABELA TEMPORÁRIA COM OS 10 FILMES MAIS ALUGADOS
+CREATE TEMPORARY TABLE filmes_mais_alugados
+AS SELECT inventory.film_id
+  FROM rental JOIN inventory on rental.inventory_id=inventory.inventory_id
+  GROUP BY inventory.film_id
+  ORDER BY COUNT(*) DESC LIMIT 10;
+
+----- NOMES ORDENADOS DOS ATORES QUE ESTAVAM NOS 10 FILMES MAIS ALUGADOS
 
 SELECT DISTINCT actor.first_name, actor.last_name
 FROM actor, film_actor
 WHERE actor.actor_id = film_actor.actor_id AND
-      film_actor.film_id in (1,2,3,4,5,6,7,8,9);
+      film_actor.film_id in (SELECT * from filmes_mais_alugados) ORDER BY first_name ASC;
 
------- QUANTOS FILMES DA LOJA 1 QUE NÃO TEM NA LOJA 2
-
-SELECT COUNT(*) AS quant_filmes FROM film
-WHERE film_id in (SELECT DISTINCT film_id
-                  FROM inventory
-                  WHERE store_id=1
-                  EXCEPT
-                  SELECT DISTINCT film_id
-                  FROM inventory
-                  WHERE store_id=2);
 
 e) junções naturais
 
@@ -67,21 +64,6 @@ SELECT film_actor.film_id,  film.title,
 from (actor join film_actor on actor.actor_id=film_actor.actor_id) join film on film.film_id=film_actor.film_id 
 WHERE film.title like "LADY STAGE";
 
------ EXIBIR OS TITULOS, DURAÇÃO E CATEGORIA DOS FILMES DA CATEGORIA CLASSICS
-
-SELECT film.title, film.length, category.name
-FROM (category JOIN film_category on category.category_id=film_category.category_id) 
-      JOIN film on film.film_id=film_category.film_id
-WHERE category.name="Classics";
-
------ EXIBIR O FILME DA CATEGORIA FOREIGN DE MANIOR DURAÇÃO
-  
-SELECT film.title, film.length, category.name
-FROM (category JOIN film_category on category.category_id=film_category.category_id) 
-      JOIN film on film.film_id=film_category.film_id
-WHERE category.name="Foreign" 
-ORDER BY film.length DESC LIMIT 1;
-
 f) junção left ou right
 
 ----- QUANTIDADE DE FILMES QUE NÃO TEM NA LOJA 2
@@ -90,28 +72,18 @@ SELECT COUNT(DISTINCT film.film_id)
 FROM film LEFT JOIN inventory on inventory.film_id = film.film_id AND inventory.store_id=2
 WHERE inventory.store_id IS NULL;
 
-SELECT COUNT( DISTINCT *) AS qtd_films FROM inventory;
 
 g) agregação
 
+------ SELECIONAR O NUMERO DE PAGAMENTOS E O VALOR MEDIO PAGO PELOS CLIENTES NA LOJA 1
+
+SELECT COUNT(amount), AVG(amount)
+FROM payment, staff
+WHERE payment.staff_id=staff.staff_id AND staff.store_id=1;
+
 h) group by
 
------- SELECIONAR O FILME COM MAIOR NUMERO DE ATORES
-
-SELECT film.film_id, film.title, COUNT(*) as num_atores
-FROM (film join film_actor on film.film_id = film_actor.film_id)
-GROUP BY film.film_id
-ORDER BY num_atores DESC LIMIT 1;
-
------- SELECINAR O ATOR QUE MENOS ATUOU EM FILMES
-
-SELECT actor.actor_id, actor.first_name, actor.last_name, COUNT(*) as num_filmes
-FROM (actor join film_actor on actor.actor_id = film_actor.actor_id)
-GROUP BY actor.actor_id
-ORDER BY num_filmes ASC LIMIT 1;
-
 ------ EXIBIR OS FILMES DE MAIOR DURAÇÃO DE CADA CATEGORIA
-pra cada cadegoria, o filme de maior duração da mesma
 
 SELECT category.name, film.title, film.length
 FROM (category JOIN film_category on category.category_id=film_category.category_id) 
@@ -123,6 +95,15 @@ WHERE (category.name, film.length) in
       GROUP BY category.name);
 
 A2) fornecer o comando de criação de uma visão;
+
+------ VIEW COM A QUANTIDADE DE CLIENTES DE CADA PAÍS DO MUNDO
+
+CREATE VIEW cliente_por_pais
+AS SELECT country.country, COUNT(*) as num_clientes
+FROM (customer JOIN address on customer.address_id = address.address_id)
+      JOIN city on address.city_id=city.city_id 
+      JOIN country on country.country_id=city.country_id
+GROUP BY country.country_id;
 
 A3) elaborar um programa (sugestão: em python) que percorra os registros obtidos por um dos comandos SQL's que foi criado nos itens "a" a "h".
 
