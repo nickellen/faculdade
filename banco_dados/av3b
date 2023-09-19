@@ -106,6 +106,31 @@ FROM (customer JOIN address on customer.address_id = address.address_id)
 GROUP BY country.country_id;
 
 A3) elaborar um programa (sugestão: em python) que percorra os registros obtidos por um dos comandos SQL's que foi criado nos itens "a" a "h".
+-------------------------------------------------------
+#Percorrer registros obtidos pelo comando SQL do item e
+
+import mysql.connector
+
+mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Iamon_14",
+    database="sakila"
+)
+
+mycursor = mydb.cursor()
+
+mycursor.execute("SELECT film_actor.film_id,  film.title, \
+       film_actor.actor_id, actor.first_name, actor.last_name \
+from (actor join film_actor on actor.actor_id=film_actor.actor_id) join film on film.film_id=film_actor.film_id  \
+WHERE film.title like 'LADY STAGE'")
+
+myresult = mycursor.fetchall()
+
+print("ATORES DE LADY STAGE: \n")
+for x in myresult:
+    print("- ", x[3], x[4])
+-------------------------------------------------------
 
 PARA TODAS AS RESPOSTAS FORNEÇA TAMBÉM um ou mais print's da tela, demonstrando a execução do comando.
 
