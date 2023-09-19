@@ -1,9 +1,3 @@
-/*
-* \author: Éder Augusto Penharbel
-* \date: February, 2022
-* \version: February, 2022
-*/
-
 # generate 16-bit code
 .code16 			   
 # executable code location
