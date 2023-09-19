@@ -1,4 +1,4 @@
-e.code16
+.code16
 .text
 .globl _start
 
