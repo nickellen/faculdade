@@ -3,6 +3,9 @@
 
 .globl _start
 
+#implementando uma interrupção - exercicio 9
+
+
 _start:
     
     mov $0x00, %ax       #configurar ivt
