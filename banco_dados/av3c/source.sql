@@ -1,5 +1,8 @@
 DELIMITER $
 
+    -- Fernanda Ribeiro Martins e Monique Ellen dos Santos
+    -- Estrágia escolhida: 2
+
     -- Esse trigger não está funcionando devido a surgir o seguinte problema:
     -- quando se faz o insert de uma nova ocorrencia com uma chave primária já utilizada, ocorre um erro devido a duplicacão da chave
     -- porém ao tentar deletar esse ocorrência antes da nova insercão, tem-se outro problema:
