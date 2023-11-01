@@ -1,0 +1,36 @@
+DELIMITER $
+
+    -- Esse trigger não está funcionando devido a surgir o seguinte problema:
+    -- quando se faz o insert de uma nova ocorrencia com uma chave primária já utilizada, ocorre um erro devido a duplicacão da chave
+    -- porém ao tentar deletar esse ocorrência antes da nova insercão, tem-se outro problema:
+    -- de tentar deletar a ocorrência que já está sendo utilizada no trigger.
+
+    -- Criar Trigger para inserir row no log antes de inserir uma nova linha na tabela
+    CREATE TRIGGER inserir_no_log BEFORE INSERT ON livro FOR EACH ROW
+    BEGIN       
+        -- obtem o isbn do livro que vai ser inserido
+        SET @old_isbn = (SELECT isbn from livro where isbn = NEW.isbn);
+
+        -- verifica se o isbn já exite
+        IF @old_isbn = NEW.isbn THEN
+            INSERT INTO livro_log VALUES(NEW.isbn, NEW.nome, NEW.autor, NEW.genero);
+            delete from livro where isbn=NEW.isbn;
+        END IF;
+    END$
+
+    -- Criar Trigger para atualizar row 
+    CREATE TRIGGER atualizar_no_log BEFORE UPDATE ON livro FOR EACH ROW
+    BEGIN       
+        -- adiciona os valores do log
+        INSERT INTO livro_log VALUES(OLD.isbn, OLD.nome, OLD.autor, OLD.genero);
+    END$
+
+
+    -- Trigger para excluir da tabela
+    CREATE TRIGGER excluir_no_log BEFORE DELETE ON livro FOR EACH ROW
+    BEGIN       
+        -- adiciona os valores do log
+        INSERT INTO livro_log VALUES(OLD.isbn, OLD.nome, OLD.autor, OLD.genero);
+    END$
+
+DELIMITER ;
