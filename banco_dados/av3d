@@ -4,4 +4,4 @@ SELECT employees.first_name, employees.last_name, departments.dept_name
 		
 SELECT employees.first_name, employees.last_name, departments.dept_name 
 	FROM employees,departments, dept_emp
-	WHERE employees.emp_no=dept_emp.emp_no and
+	WHERE employees.emp_no=dept_emp.emp_no and dept_emp.dept_no=department.dept_no;
