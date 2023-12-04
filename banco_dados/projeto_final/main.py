@@ -1,16 +1,47 @@
 import mysql.connector
 import os
 
+os.system("clear")
+usuario = input("Digite o nome de usuário do banco de dados: ")
+senha = input("Digite a senha do banco de dados: ")
+
 # configurações
 mydb = mysql.connector.connect(
   host="localhost",
-  user="root",
-  password="Iamon_14",
+  user= usuario,
+  password=senha,
   database="teste"
 )
+
 # conexão
 mycursor = mydb.cursor()
 
+def grants():
+
+    mycursor.execute("SHOW GRANTS FOR %s@'%';", (usuario,))
+    resultado = mycursor.fetchall()
+    print(len(resultado))
+    if len(resultado)>4:
+        return 1
+    return 2
+    
+
+def logoff():
+    
+    mycursor.execute("SHOW STATUS LIKE 'Com_select';")
+    select = mycursor.fetchall()
+
+    mycursor.execute("SHOW STATUS LIKE 'Com_delete';")
+    delete = mycursor.fetchall()
+
+    mycursor.execute("SHOW STATUS LIKE 'Com_update';")
+    update = mycursor.fetchall()
+
+    info = (select[0][1], delete[0][1], update[0][1] )
+    sql = "update controle_de_acesso set logout_ts = NOW(), qtd_select = %s, qtd_delete = %s, qtd_update = %s WHERE id_conexao = CONNECTION_ID();"
+    mycursor.execute(sql, info)
+    mydb.commit()
+                     
 def fim():
     input("Pressione Enter para continuar...")
     os.system("clear")
@@ -126,7 +157,8 @@ def atualizacao():
     selecionar(lista[0])
 
 
-def main():
+def administrador():
+
     while(True):
         print ("==============================================")
         print ("0. Fim")
@@ -154,8 +186,42 @@ def main():
         fim()
 
     mydb.commit()
+
+    logoff()
     mydb.close()
     print ("Fim do programa!\n")
+
+def consulta():
+
+    while(True):
+        print ("==============================================")
+        print ("0. Fim")
+        print ("1. Selecionar")
+        print ("==============================================")
+        task= int(input("Insira uma opcao: "))
+        os.system("clear")
+        
+        if(task==1):
+            selecionar()
+        elif(task==0):
+            break
+        else:
+            print ("Voce informou um número invalido\n")
+        fim()
+
+    mydb.commit()
+
+    logoff()
+    mydb.close()
+    print ("Fim do programa!\n")
+
+def main():
+
+    if grants()==1:
+        administrador()
+    
+    else:
+        consulta()
 
 if __name__ == '__main__':
     main()
