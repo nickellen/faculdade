@@ -1,15 +1,38 @@
-import mysql.connector
+# Autoras: Monique Ellen dos Santos e Fernanda Ribeiro Martins
+# Data: 6 de dezembro de 2023
+
+# Este script Python tem como objetivo realizar a inserção de informações sobre livros em um banco de dados MySQL 
+# chamado 'teste'. Utiliza o módulo mysql.connector para se conectar ao banco de dados e efetuar as inserções 
+# na tabela 'livro'.
+
+# Observações:
+# A execução do script depende da existência prévia do banco de dados "teste" e da tabela "livro".
+# Certifique-se de ter a biblioteca `mysql-connector-python` instalada (`pip install mysql-connector-python`).
+
+import mysql.connector                 
 
 mybd = mysql.connector.connect(
-        host='localhost',
-        user='root',
-        password='senha',
-        database='teste'
-    )
+    # Estabelece uma conexão com o banco de dados MySQL, utilizando as credenciais fornecidas (
+    # host, usuário, senha) e selecionando o banco de dados 'teste'.
 
-mycursor = mybd.cursor()
+    host = 'localhost',
+    user ='root',
+    password ='senha',
+    database ='teste'
+)
+
+mycursor = mybd.cursor() # Cria um cursor para interagir com o banco de dados.
 
 def adicionar_livro(isbn, nome, autor, genero):
+    """
+    A função recebe quatro valores de string e 
+    adiona-as como um registro no banco de dados.
+    :param isbn: String do Padrão Internacional 
+    de Numeração de Livro (char (13))
+    :param nome: String do titulo do livro
+    :param autor: String com o nome do autor
+    :param genero: String com o gênero do livro   
+    """
 
     query = "INSERT INTO livro (isbn, nome, autor, genero) VALUES (%s, %s, %s, %s)"
     values = (isbn, nome, autor, genero)
@@ -23,10 +46,18 @@ def adicionar_livro(isbn, nome, autor, genero):
         print(f"Erro ao adicionar livro: {err}")
 
 def fim():
+    """
+    Função para fechar o cursor e a conexão com 
+    o banco de dados.
+    """
     mycursor.close()
     mybd.close()
 
 def main():
+    """
+    Função principal que adiciona uma lista de 
+    livros ao bd.
+    """
 
     adicionar_livro('9780137135266', 'Clean Code', 'Robert C. Martin', 'Programação')
     adicionar_livro('9780316416896', 'The Martian', 'Andy Weir', 'Ficção Científica')
