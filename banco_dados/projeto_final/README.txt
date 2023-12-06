@@ -1,7 +1,7 @@
 !!!!!!
 A variável init_connect chama a função de login caso se esteja utilizando o procedure.
  
-Estratégia de procedure/triggers: SET GLOBAL init_connect = 'CALL biblioteca.login_trigger()';
+Estratégia de procedure/triggers: SET GLOBAL init_connect = 'CALL teste.login_trigger()';
 Estratégia de programa python:    SET GLOBAL init_connect = '';
 
 
