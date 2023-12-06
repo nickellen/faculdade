@@ -1,6 +1,9 @@
 import mysql.connector
 import os
 
+#!!!!!!!!!!
+# REMOVER COMENTARIOS caso for cadastrar usuário para realizar a extratégia de procedures/triggers
+
 mydb = mysql.connector.connect(
   host="localhost",
   user= "root",
@@ -45,15 +48,13 @@ def cadastro(mod):
 
     mycursor.execute("CREATE USER %s@'%' IDENTIFIED BY %s;", (usuario, senha))
     
-    mycursor.execute("GRANT EXECUTE ON PROCEDURE teste.login_trigger TO %s@'%';", (usuario,))
+    # mycursor.execute("GRANT EXECUTE ON PROCEDURE teste.login_trigger TO %s@'%';", (usuario,)) 
     mycursor.execute("GRANT UPDATE, SELECT, INSERT ON teste.controle_de_acesso TO %s@'%';", (usuario,))
     mycursor.execute("FLUSH PRIVILEGES;")
 
     if mod==1:
 
         mycursor.execute("GRANT UPDATE, INSERT, DELETE, SELECT ON teste.livro TO %s@'%';", (usuario,))
-        mycursor.execute("GRANT INSERT, SELECT ON teste.livro_log TO %s@'%';", (usuario,))
-
     else:
 
         mycursor.execute("GRANT SELECT ON teste.livro TO %s@'%';", (usuario,))
