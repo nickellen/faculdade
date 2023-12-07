@@ -1,3 +1,5 @@
+<b2> SEGUE O CONTEÚDO DOS EXERCÍCIOS <b2>
+
 1 - Fazer os seguintes programas em Assembly:
 
     1a : Somar dois inteiros e analisar a resposta no debugger do Bochs
