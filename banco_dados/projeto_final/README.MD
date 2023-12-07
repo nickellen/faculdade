@@ -1,4 +1,4 @@
-## Notas
+## Avisos
 
 A variável init_connect chama a função de login caso se esteja utilizando o procedure.
 
