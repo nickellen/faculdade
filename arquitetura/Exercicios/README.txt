@@ -1,4 +1,4 @@
-<t2> SEGUE O CONTEÚDO DOS EXERCÍCIOS <t2>
+SEGUE O CONTEÚDO DOS EXERCÍCIOS
 
 1 - Fazer os seguintes programas em Assembly:
 
