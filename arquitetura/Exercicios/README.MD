@@ -1,4 +1,4 @@
-## SEGUE O CONTEÚDO DOS EXERCÍCIOS
+## Segue o conteúdo dos exercícios
 
 1 - Fazer os seguintes programas em Assembly:
 
