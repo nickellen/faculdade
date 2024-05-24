@@ -1,0 +1,63 @@
+# Implementar uma calculadora com as seguintes funcionalidades: adição, subtração, multiplicação, divisão, exponenciação e raiz quadrada.
+
+# *  Especificar os casos de testes de unidade indicando:
+#  - Estado inicial
+#  - Entradas de teste
+#  - Condições de execução
+#  - Saídas esperadas.
+
+import math
+import os
+import unittest
+
+class Calculadora:
+
+    def __init__(self):
+        self.v1 = 0
+        self.v2 = 0
+
+    def adicao(self, v1, v2):
+        resultado = (v1 + v2)
+        return resultado
+
+    def subtracao(self, v1, v2):
+        resultado = (v1 - v2)
+        return resultado
+
+    def multiplicacao(self, v1, v2):
+        resultado = (v1 * v2)
+        return resultado
+
+    def divisao(self, v1, v2):
+        if v2 == 0:
+            return "Erro: divisão por 0."
+        
+        else:
+            resultado = (v1 / v2)
+            return resultado
+
+    def exponenciacao(self, v1, v2):
+        resultado = (v1 ** v2)
+        return resultado
+        
+    def raiz_quadrada(self, v1):
+        if (v1<0):
+            return "Erro: não existe dentro dos reais."
+        
+        else:
+            resultado = (math.sqrt(v1))
+            return resultado
+    
+
+class TestClass(unittest.TestCase):
+
+    def test_meu_metodo(self):
+        calculadora = Calculadora()
+
+        self.assertEqual(calculadora.adicao(4, 1), 5, "ERRO")
+
+        self.assertEqual(calculadora.divisao(5, 0),"Erro: divisão por 0." , "ERRO")
+
+        self.assertEqual(calculadora.adicao(4, 1), 5, "ERRO")
+
+unittest.main()
