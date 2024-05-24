@@ -12,10 +12,6 @@ import unittest
 
 class Calculadora:
 
-    def __init__(self):
-        self.v1 = 0
-        self.v2 = 0
-
     def adicao(self, v1, v2):
         resultado = (v1 + v2)
         return resultado
@@ -55,9 +51,19 @@ class TestClass(unittest.TestCase):
         calculadora = Calculadora()
 
         self.assertEqual(calculadora.adicao(4, 1), 5, "ERRO")
+        self.assertEqual(calculadora.adicao(-4, -1), -5, "ERRO")
+        self.assertEqual(calculadora.adicao(4, -1), 3, "ERRO")
+        self.assertEqual(calculadora.adicao(-4, 1), -3, "ERRO")
+
+
+        self.assertEqual(calculadora.divisao(4, 1), 5, "ERRO")
+        self.assertEqual(calculadora.divisao(-4, -1), -5, "ERRO")
+        self.assertEqual(calculadora.divisao(4, -1), 3, "ERRO")
+        self.assertEqual(calculadora.divisao(-4, 1), -3, "ERRO")
+
 
         self.assertEqual(calculadora.divisao(5, 0),"Erro: divisão por 0." , "ERRO")
 
-        self.assertEqual(calculadora.adicao(4, 1), 5, "ERRO")
+        self.assertEqual(calculadora.raiz_quadrada(-1), "Erro: não existe dentro dos reais.", "ERRO")
 
 unittest.main()
