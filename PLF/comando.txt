@@ -1,0 +1,3 @@
+ghc test.hs
+./test <in >out2
+diff out2 out
