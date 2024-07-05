@@ -56,6 +56,6 @@ def main(host = 'localhost', port=8082):
         for cliente in clientes:
             cliente.close()
         servidor.close()
-        print("Servidor fechado.")
+        return print("Servidor fechado.")
 
 main()
